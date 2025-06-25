@@ -2,5 +2,10 @@ import { getRandomColor } from './getRandomColor';
 import { getRandomCountdown } from './getRandomCountdown';
 
 export const createNewCard = () => {
-  return { id: Date.now(), color: getRandomColor(), countdown: getRandomCountdown() };
+  return {
+    id: Math.random().toFixed(50),
+    color: getRandomColor(),
+    countdown: getRandomCountdown(),
+    createdAt: Date.now(),
+  };
 };

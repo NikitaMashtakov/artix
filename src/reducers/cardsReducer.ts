@@ -10,8 +10,10 @@ export const cardsReducer = (state: Card[], action) => {
     case 'DELETE_CARD':
       return state.filter(({ id }) => id !== payload.id);
     case 'ADD_CARDS': {
+      console.log('add cards');
       const newCards = generateCards(payload.count);
-      return { ...state, ...newCards };
+      console.log('new cards', { ...state, ...newCards });
+      return [...state, ...newCards];
     }
     default:
       return state;

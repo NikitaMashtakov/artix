@@ -1,5 +1,5 @@
 import type { ComponentProps, FC } from 'react';
-import styles from './Button.module.css';
+import styles from './Input.module.css';
 
 // interface IInputProps extends ComponentProps<'button'> {
 // }

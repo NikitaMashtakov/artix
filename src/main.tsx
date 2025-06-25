@@ -5,9 +5,9 @@ import App from './App.tsx';
 import { CardsProvider } from './contexts/CardsContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <CardsProvider>
-      <App />
-    </CardsProvider>
-  </StrictMode>,
+  // <StrictMode>
+  <CardsProvider>
+    <App />
+  </CardsProvider>,
+  // </StrictMode>,
 );
