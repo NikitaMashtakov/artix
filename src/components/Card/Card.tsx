@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from 'react';
 import styles from './Card.module.css';
 import { useCardsDispatch } from '../../contexts/CardsContext';
+import { getRandomCountdown } from '../../utils/getRandomCountdown';
 
 type Props = {
   id: string;
@@ -30,8 +31,9 @@ const Card: FC<Props> = ({ id, color, countdown }) => {
   }, [dispatch, id]);
 
   const handleCardClick = () => {
-    // setTimeLeft(countdown);
-    dispatch({ type: 'UPDATE_COUNTDOWN', payload: { id } });
+    const newCountdown = getRandomCountdown();
+    dispatch({ type: 'UPDATE_COUNTDOWN', payload: { id, countdown: newCountdown } });
+    setTimeLeft(newCountdown);
   };
 
   const progressPercent = (timeLeft / countdown) * 100;
