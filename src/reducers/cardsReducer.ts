@@ -1,6 +1,5 @@
 import type { Card, CardsAction } from '../types';
 import { generateCards } from '../utils/generateCards';
-import { getRandomCountdown } from '../utils/getRandomCountdown';
 
 export const initialCardsState: Card[] = [];
 
@@ -14,11 +13,11 @@ export const cardsReducer = (state: Card[], action: CardsAction) => {
       const newCards = generateCards(payload.count);
       return [...state, ...newCards];
     }
-    case 'UPDATE_COUNTDOWN': {
+    case 'UPDATE_COUNTDOWN':
       return state.map((card) =>
-        card.id === payload.id ? { ...card, countdown: getRandomCountdown() } : card,
+        card.id === payload.id ? { ...card, countdown: payload.countdown } : card,
       );
-    }
+
     default:
       return state;
   }

@@ -8,4 +8,4 @@ export type Card = {
 export type CardsAction =
   | { type: 'ADD_CARDS'; payload: { count: number } }
   | { type: 'DELETE_CARD'; payload: { id: string } }
-  | { type: 'UPDATE_COUNTDOWN'; payload: { id: string } };
+  | { type: 'UPDATE_COUNTDOWN'; payload: { id: string; countdown: number } };
