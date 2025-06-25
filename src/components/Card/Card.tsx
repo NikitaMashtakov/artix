@@ -1,39 +1,55 @@
-import React, { useEffect, useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import styles from './Card.module.css';
-import { getRandomColor } from '../../utils/getRandomColor';
-import { getRandomCountdown } from '../../utils/getRandomCountdown';
 import { useCardsDispatch } from '../../contexts/CardsContext';
 
 type Props = {
-  id: number;
+  id: string;
   color: string;
   countdown: number;
 };
-let tim: number | undefined;
-const color = getRandomColor();
 
 const Card: FC<Props> = ({ id, color, countdown }) => {
-  // const [color, setColor] = useState('');
-  // const [countdown, setCountdown] = useState(getRandomCountdown());
+  const [timeLeft, setTimeLeft] = useState(countdown);
+  const [isVisible, setIsVisible] = useState(true);
+
   const dispatch = useCardsDispatch();
+
   useEffect(() => {
-    // setColor(getRandomColor());
-    setInterval(() => {}, 1000);
-  }, []);
-  useEffect(() => {}, []);
-  se;
-  const handleCardClick = (id) => {
-    // dispatch();
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 200) {
+          clearInterval(interval);
+          setIsVisible(false);
+          setTimeout(() => dispatch({ type: 'DELETE_CARD', payload: { id } }), 50);
+          return 0;
+        }
+        return prev - 200;
+      });
+    }, 200);
+    return () => clearInterval(interval);
+  }, [dispatch, id]);
+
+  const handleCardClick = () => {
+    // setTimeLeft(countdown);
+    dispatch({ type: 'UPDATE_COUNTDOWN', payload: { id } });
   };
+
+  const progressPercent = (timeLeft / countdown) * 100;
 
   return (
     <div
-      className={styles.container}
+      className={`${styles.card} ${isVisible ? styles.visible : styles.hidden}`}
       style={{ backgroundColor: `${color}` }}
-      onClick={handleCardClick(id)}
+      onClick={handleCardClick}
     >
       <p>{color}</p>
-      <p>{countdown}</p>
+      <p>{`${timeLeft / 1000} s.`}</p>
+      <div className={styles.progressBarWrapper}>
+        <div
+          className={styles.progressBar}
+          style={{ width: `${progressPercent}%` }}
+        ></div>
+      </div>
     </div>
   );
 };

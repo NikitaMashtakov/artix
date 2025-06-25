@@ -1,18 +1,19 @@
-import { createContext, useContext, useReducer, type Dispatch } from 'react';
+import { createContext, useContext, useReducer, type Dispatch, type FC } from 'react';
 import { cardsReducer, initialCardsState } from '../reducers/cardsReducer';
-import type { Card } from '../types';
+import type { Card, CardsAction } from '../types';
 
 type CardsContextType = {
   cards: Card[];
 };
 
-type CardsAction =
-  | { type: 'ADD_CARDS'; payload: { count: number } }
-  | { type: 'REMOVE_CARD'; payload: { id: number } };
+type CardsProviderType = {
+  children: React.ReactNode;
+};
 
 const CardsContext = createContext<CardsContextType>({ cards: [] });
 const CardsDispatchContext = createContext<Dispatch<CardsAction> | null>(null);
-export const CardsProvider = ({ children }) => {
+
+export const CardsProvider: FC<CardsProviderType> = ({ children }) => {
   const [cards, dispatch] = useReducer(cardsReducer, initialCardsState);
 
   return (

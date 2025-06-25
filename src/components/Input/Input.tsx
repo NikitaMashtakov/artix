@@ -1,11 +1,17 @@
 import type { ComponentProps, FC } from 'react';
 import styles from './Input.module.css';
 
-// interface IInputProps extends ComponentProps<'button'> {
-// }
+interface IInputProps extends ComponentProps<'input'> {
+  label: string;
+}
 
-const Input: FC<ComponentProps<'input'>> = ({ ...props }) => {
-  return <input className={styles.button} {...props} />;
+const Input: FC<IInputProps> = ({ label, ...props }) => {
+  return (
+    <>
+      <label htmlFor="">{label}</label>
+      <input className={styles.input} {...props} />
+    </>
+  );
 };
 
 export default Input;

@@ -1,4 +1,35 @@
-.container {
+.card {
   width: 150px;
   height: 100px;
+  padding: 5px;
+  text-align: center;
+  color: #cfcfcf;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.progressBarWrapper {
+  margin-top: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #cacaca;
+  transition: width 0.1s linear;
+}
+
+.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hidden {
+  opacity: 0;
+  transform: scale(0.95);
 }

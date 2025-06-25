@@ -5,41 +5,57 @@ import Input from './components/Input/Input';
 import { useCards, useCardsDispatch } from './contexts/CardsContext';
 import Card from './components/Card/Card';
 
-let intervalId: number | undefined;
-
 function App() {
   const [count, setCount] = useState(1);
-  const [int, setInt] = useState(1000);
+  const [period, setPeriod] = useState(1000);
+  const [isStarted, setIsStarted] = useState(false);
   const { cards } = useCards();
   const dispatch = useCardsDispatch();
-  const handleStart = () => {
-    setInterval(() => {
-      dispatch({ type: 'ADD_CARDS', payload: { count: count } });
-    }, int);
-  };
-  useEffect(() => {}, [count, int]);
+
+  const handleStartStop = () => setIsStarted((prev) => !prev);
+
+  useEffect(() => {
+    let interval: number;
+    if (isStarted) {
+      interval = setInterval(() => {
+        dispatch({ type: 'ADD_CARDS', payload: { count: count } });
+      }, period);
+    }
+    return () => clearInterval(interval);
+  }, [count, period, dispatch, isStarted]);
+
   return (
     <div className={styles.container}>
       <Input
+        label="Количество карточек:"
         placeholder="count"
-        type="number"
+        type="text"
         value={count}
-        onChange={({ target }) => setCount(Number(target.value))}
+        onChange={({ target }) => {
+          if (!isNaN(Number(target.value))) {
+            setCount(Number(target.value));
+          }
+        }}
       />
       <Input
+        label="Интервал:"
         placeholder="interval"
-        type="number"
-        value={int}
-        onChange={({ target }) => setInt(Number(target.value))}
+        type="text"
+        value={period / 1000}
+        onChange={({ target }) => {
+          if (!isNaN(Number(target.value))) {
+            setPeriod(Number(target.value) * 1000);
+          }
+        }}
       />
-      <Button label={'Start'} onClick={handleStart} />
-      <Button label={'Stop'} onClick={handleStop}} />
-
-      {cards
-        ? cards.map(({ id, color, countdown }) => (
-            <Card key={id} id={id} color={color} countdown={countdown} />
-          ))
-        : null}
+      <Button label={isStarted ? 'Стоп' : 'Старт'} onClick={handleStartStop} />
+      <div className={styles.cardsList}>
+        {cards
+          ? cards.map(({ id, color, countdown }) => (
+              <Card key={id} id={id} color={color} countdown={countdown} />
+            ))
+          : null}
+      </div>
     </div>
   );
 }
