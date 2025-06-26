@@ -4,6 +4,7 @@ import styles from './App.module.css';
 import Input from './components/Input/Input';
 import { useCards, useCardsDispatch } from './contexts/CardsContext';
 import Card from './components/Card/Card';
+import * as yup from 'yup';
 import { Error } from './components/Error/Error';
 
 type ErrorState = {
@@ -11,19 +12,52 @@ type ErrorState = {
   periodError: string | null;
 };
 
+const countInputSchema = yup
+  .number()
+  .required()
+  .min(1, 'Количество карточек должно быть больше 1')
+  .max(1000, 'Количество карточек должно быть меньше 1000');
+const periodInputSchema = yup
+  .number()
+  .required()
+  .min(1, 'Интервал должнен быть больше 1 секунды')
+  .max(10, 'Интервал должнен быть меньше 10 секунд');
+
+const validateAndGetErrorMessage = (schema: yup.Schema, value: string | number) => {
+  let errorMessage = null;
+
+  try {
+    schema.validateSync(value);
+  } catch ({ errors }) {
+    console.log(typeof errors);
+    errorMessage = errors.reduce((message, error) => message + '').trim();
+  }
+
+  return errorMessage;
+};
+
 function App() {
   const [count, setCount] = useState<number>(1);
   const [period, setPeriod] = useState<number>(1000);
   const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [isFirstGeneration, setIsFirstGeneration] = useState<boolean>(false);
   const [error, setError] = useState<ErrorState>({ countError: null, periodError: null });
   const { cards } = useCards();
   const dispatch = useCardsDispatch();
 
-  const handleStartStop = () => setIsStarted((prev) => !prev);
+  const handleStartStop = () => {
+    setIsStarted((prev) => !prev);
+    setIsFirstGeneration(true);
+  };
 
   const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (period === 0) return;
+    if (isFirstGeneration) {
+      dispatch({ type: 'ADD_CARDS', payload: { count: count } });
+      setIsFirstGeneration(false);
+    }
     let interval: number;
     if (isStarted) {
       interval = setInterval(() => {
@@ -58,20 +92,12 @@ function App() {
         value={count}
         onChange={({ target }) => {
           const value = Number(target.value);
-          if (!isNaN(value)) {
-            if (value > 0 && value <= 100) {
-              setCount(value);
-              setError((prev) => ({
-                ...prev,
-                countError: null,
-              }));
-            } else {
-              setError((prev) => ({
-                ...prev,
-                countError: 'Значение должно быть от 1 до 100',
-              }));
-            }
-          }
+          setCount(value);
+          const newError = validateAndGetErrorMessage(countInputSchema, value);
+          setError((prev) => ({
+            ...prev,
+            countError: newError,
+          }));
         }}
       />
       {error.countError ? <Error text={error.countError} /> : null}
@@ -82,20 +108,12 @@ function App() {
         value={period / 1000}
         onChange={({ target }) => {
           const value = Number(target.value);
-          if (!isNaN(value)) {
-            if (value < 0 && value >= 100) {
-              setError((prev) => ({
-                ...prev,
-                periodError: 'Значение должно быть от 1 до 100',
-              }));
-            } else {
-              setPeriod(value * 1000);
-              setError((prev) => ({
-                ...prev,
-                periodError: null,
-              }));
-            }
-          }
+          const newError = validateAndGetErrorMessage(periodInputSchema, value);
+          setPeriod(value * 1000);
+          setError((prev) => ({
+            ...prev,
+            periodError: newError,
+          }));
         }}
       />
       {error.periodError ? <Error text={error.periodError} /> : null}
