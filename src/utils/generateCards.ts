@@ -1,4 +1,4 @@
-import type { Card } from '../types';
+import type { Card } from '../types/types';
 import { createNewCard } from './createNewCard';
 
 export const generateCards = (count: number) => {

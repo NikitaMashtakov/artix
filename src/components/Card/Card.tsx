@@ -10,8 +10,8 @@ type Props = {
 };
 
 const Card: FC<Props> = ({ id, color, countdown }) => {
-  const [timeLeft, setTimeLeft] = useState(countdown);
-  const [isVisible, setIsVisible] = useState(true);
+  const [timeLeft, setTimeLeft] = useState<number>(countdown);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const dispatch = useCardsDispatch();
 

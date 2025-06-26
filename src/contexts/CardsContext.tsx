@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, type Dispatch, type FC } from 'react';
 import { cardsReducer, initialCardsState } from '../reducers/cardsReducer';
-import type { Card, CardsAction } from '../types';
+import type { Card, CardsAction } from '../types/types';
 
 type CardsContextType = {
   cards: Card[];
