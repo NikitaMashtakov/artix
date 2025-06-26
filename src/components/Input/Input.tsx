@@ -8,7 +8,7 @@ interface IInputProps extends ComponentProps<'input'> {
 const Input: FC<IInputProps> = ({ label, ...props }) => {
   return (
     <>
-      <label htmlFor="">{label}</label>
+      <label htmlFor={props.id}>{label}</label>
       <input className={styles.input} {...props} />
     </>
   );

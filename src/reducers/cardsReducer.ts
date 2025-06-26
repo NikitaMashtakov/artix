@@ -1,4 +1,4 @@
-import type { Card, CardsAction } from '../types';
+import type { Card, CardsAction } from '../types/types';
 import { generateCards } from '../utils/generateCards';
 
 export const initialCardsState: Card[] = [];
